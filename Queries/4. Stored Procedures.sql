@@ -1,7 +1,7 @@
 -- Creating a Procedure to Get Total Sales of a Product if Typed
 DELIMITER $$ 
 CREATE PROCEDURE GetTotalSalesOfProduct (
-	IN pName VARCHAR(255),
+    IN pName VARCHAR(255),
     OUT total_sales INT
 )
 BEGIN 
@@ -18,13 +18,13 @@ SELECT @total_sales;
 -- Creating a Procedure to Get Number of Orders Based on Region
 DELIMITER $$
 CREATE PROCEDURE OrdersBasedOnRegion (
-	IN pCountry VARCHAR(25),
+    IN pCountry VARCHAR(25),
     IN pState VARCHAR(50),
     IN pCity VARCHAR(50),
     OUT total_orders INT
 )
 BEGIN
-	SELECT COUNT(OrderID)
+    SELECT COUNT(OrderID)
     INTO total_orders
     FROM superstore
     WHERE Country = pCountry AND City = pCity AND State = pState;
