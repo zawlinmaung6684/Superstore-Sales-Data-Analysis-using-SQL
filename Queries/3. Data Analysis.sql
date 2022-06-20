@@ -18,14 +18,14 @@ GROUP BY ShipMode;
 -- Yearly Sales
 SELECT 
 	YEAR(OrderDate) AS Year, 
-    COUNT(OrderID) AS TotalOrders, 
-    CONCAT('$ ', SUM(Sales)) AS TotalSales
+    	COUNT(OrderID) AS TotalOrders, 
+    	CONCAT('$ ', SUM(Sales)) AS TotalSales
 FROM superstore
 GROUP BY Year WITH ROLLUP;
 
 -- Analyzing Orders Based on Region
 /*
-	1. Count All Orders Based On Country, State, City, and Region.
+    1. Count All Orders Based On Country, State, City, and Region.
     2. Create a New Column to Display Total Orders per State.
     3. Rank each State Based on their Total Orders.
 */
@@ -45,7 +45,7 @@ FROM (
 
 -- Analyzing Segment
 /*
-	1. Count Orders from Each Segment.
+    1. Count Orders from Each Segment.
     2. Calculate Percentage.
 */
 WITH SegmentPercent AS (
@@ -54,7 +54,7 @@ WITH SegmentPercent AS (
 	GROUP BY Segment
 )
 SELECT 
-	Segment,
+    Segment,
     TotalOrders, 
     CONCAT('$ ', TotalSales) AS TotalSales,
     CONCAT(ROUND((TotalSales / (SELECT SUM(TotalSales) FROM SegmentPercent)) * 100, 2), '%') AS SalesPercent
@@ -62,7 +62,7 @@ FROM SegmentPercent;
 
 -- Analzying Category and Subcategory Orders
 /*
-	1. Count Subcategory Grouped by Category.
+    1. Count Subcategory Grouped by Category.
     2. Count Category using Windows Function.
     3. Calculate Percentages of Subcategory and Category.
 */
@@ -73,7 +73,7 @@ WITH Category AS (
 	ORDER BY 1
 )
 SELECT *, 
-	CONCAT(ROUND((SubCategoryOrders / CategoryOrders) * 100, 2), '%') AS SubCategoryPercent,
+    CONCAT(ROUND((SubCategoryOrders / CategoryOrders) * 100, 2), '%') AS SubCategoryPercent,
     CONCAT(ROUND((CategoryOrders / (SELECT SUM(SubCategoryOrders) FROM Category)) * 100, 2), '%') AS CategoryPercent
 FROM (
 	SELECT *, SUM(SubCategoryOrders) OVER (PARTITION BY Category) AS CategoryOrders
@@ -93,19 +93,19 @@ SELECT CONCAT('$ ', SUM(sales)) AS total_revenue
 FROM superstore;
 
 /*
-	1. Count SubCategory and Sum their Sales.
+    1. Count SubCategory and Sum their Sales.
     2. Calculate Average Price of Each Subcategory.
 */
 SELECT 
-	SubCategory
+    SubCategory
     count,
     CONCAT('$ ', FORMAT(total_sales / count, 2)) AS average_price_per_item,
     CONCAT('$ ', total_sales) AS total_sales
 FROM (
 	SELECT 
-		SubCategory, 
-		COUNT(Subcategory) AS count,
-        SUM(sales) AS total_sales
+	    SubCategory, 
+	    COUNT(Subcategory) AS count,
+            SUM(sales) AS total_sales
 	FROM superstore
 	GROUP BY 1
     ORDER BY total_sales DESC
@@ -113,19 +113,19 @@ FROM (
 
 -- Analzying Product Sales
 /*
-	1. Count Products Based on ProductName, and Sum Total Sales of Each Product.
+    1. Count Products Based on ProductName, and Sum Total Sales of Each Product.
     2. Calculate the Average Price of Each Product.
 */
 SELECT 
-	ProductName, 
-	OrderCount, 
+    ProductName, 
+    OrderCount, 
     CONCAT('$ ', FORMAT(total_sales / OrderCount, 2)) AS average_price_per_product,
     CONCAT('$ ', total_sales) AS total_sales
 FROM (
 	SELECT DISTINCT ProductName, COUNT(OrderId) AS OrderCount, SUM(sales) AS total_sales
 	FROM superstore
 	GROUP BY 1
-    ORDER BY 3
+    	ORDER BY 3
 ) AS t;
 
 -- 5 Products with Highest Orders
@@ -137,7 +137,7 @@ LIMIT 5;
 
 -- 5 Products with Highest Average Prices
 SELECT 
-	ProductName, 
+    ProductName, 
     ROUND(total_sales / order_count, 2) AS average_price
 FROM (
 	SELECT ProductName, COUNT(OrderId) AS order_count, SUM(Sales) AS total_sales
@@ -149,7 +149,7 @@ LIMIT 5;
 
 -- Date Difference Between OrderDate and ShipDate
 SELECT 
-	OrderDate, 
+    OrderDate, 
     COUNT(OrderID) AS OrderCount, 
     ShipDate,
     DATEDIFF(ShipDate, OrderDate) AS ShippingDelayTime
